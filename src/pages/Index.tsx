@@ -44,7 +44,7 @@ const Index = () => {
       </header>
 
       {/* Main */}
-      <main className="container mx-auto max-w-5xl px-4 py-8 md:py-12">
+      <main id="inicio" className="container mx-auto max-w-5xl px-4 py-8 md:py-12">
         <h1 className="mb-2 text-3xl font-bold text-foreground md:text-4xl">
           Calculadora de Juros Compostos
         </h1>
@@ -53,7 +53,9 @@ const Index = () => {
           o poder dos juros sobre juros ao longo do tempo.
         </p>
 
-        <CompoundInterestCalculator />
+        <section id="calculadoras" className="scroll-mt-24">
+          <CompoundInterestCalculator />
+        </section>
 
         {/* Step by step */}
         <section className="mt-12 space-y-6">
