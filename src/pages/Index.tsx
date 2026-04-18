@@ -1,4 +1,3 @@
-import { Search } from "lucide-react";
 import CompoundInterestCalculator from "@/components/CompoundInterestCalculator";
 
 const Index = () => {
