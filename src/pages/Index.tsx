@@ -1,4 +1,6 @@
 import CompoundInterestCalculator from "@/components/CompoundInterestCalculator";
+import { Mail, Phone, Linkedin, Instagram, MapPin } from "lucide-react";
+import davydPhoto from "@/assets/davyd.png";
 
 const Index = () => {
   return (
