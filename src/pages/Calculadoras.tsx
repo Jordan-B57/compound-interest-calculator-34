@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { TrendingUp, ArrowRight } from "lucide-react";
+import { TrendingUp, Trophy, ArrowRight } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
@@ -10,6 +10,14 @@ const calculadoras = [
     description:
       "Simule o crescimento dos seus investimentos com aportes mensais e veja o poder dos juros sobre juros.",
     icon: TrendingUp,
+    available: true,
+  },
+  {
+    slug: "primeiro-milhao",
+    title: "Calculadora do Primeiro Milhão",
+    description:
+      "Descubra em quanto tempo você atinge R$ 1 milhão ou qual aporte mensal é necessário para chegar lá.",
+    icon: Trophy,
     available: true,
   },
 ];
