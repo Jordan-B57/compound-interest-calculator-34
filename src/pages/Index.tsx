@@ -22,7 +22,7 @@ const Index = () => {
               Clareza financeira para decisões que mudam a sua vida
             </h1>
             <p className="text-base text-muted-foreground md:text-lg">
-              Organização, planejamento e proteção do seu patrimônio — feitos
+              Organização, planejamento e proteção do seu patrimônio, feitos
               sob medida para a sua realidade.
             </p>
           </div>
@@ -41,7 +41,7 @@ const Index = () => {
                 <figcaption className="relative mt-4 rounded-xl border-l-4 border-primary bg-card px-4 py-3 text-sm italic text-foreground shadow-sm">
                   “Dinheiro organizado é liberdade para viver o que importa.”
                   <span className="mt-1 block text-xs not-italic font-semibold text-primary">
-                    — Davyd Dunda
+                    Davyd Dunda
                   </span>
                 </figcaption>
               </div>
@@ -51,8 +51,8 @@ const Index = () => {
             <div className="md:col-span-3">
               <div className="space-y-4 text-base leading-relaxed text-foreground md:text-[17px]">
                 <p>
-                  A maioria das pessoas não tem um problema de quanto ganha —
-                  tem um problema de <strong>clareza</strong>. Falta enxergar
+                  A maioria das pessoas não tem um problema de quanto ganha.
+                  Tem um problema de <strong>clareza</strong>. Falta enxergar
                   para onde o dinheiro está indo, faltam decisões com
                   segurança, sobra a sensação de que sempre poderia render
                   mais.
@@ -74,7 +74,7 @@ const Index = () => {
                 <p>
                   Não acredito em fórmulas mágicas nem em planilhas genéricas.
                   Cada consultoria é construída a partir da sua realidade, dos
-                  seus objetivos e do seu momento de vida — porque é isso que
+                  seus objetivos e do seu momento de vida, porque é isso que
                   gera resultado de verdade.
                 </p>
                 <p className="text-muted-foreground">

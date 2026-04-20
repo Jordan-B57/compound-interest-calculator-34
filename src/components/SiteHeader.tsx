@@ -13,13 +13,10 @@ const SiteHeader = () => {
       <div className="container mx-auto flex flex-col items-stretch gap-3 px-4 py-3 md:flex-row md:items-center md:justify-between md:py-4">
         <Link to="/" className="flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded bg-primary-foreground text-primary">
-            <span className="text-lg font-black">D</span>
+            <span className="text-lg font-black">P</span>
           </div>
           <span className="text-lg font-bold leading-tight tracking-tight md:text-xl">
-            Davyd Dunda
-            <span className="block text-xs font-normal opacity-80">
-              Planejamento Financeiro
-            </span>
+            Planejamento Financeiro
           </span>
         </Link>
 
