@@ -41,6 +41,8 @@ interface MonthRow {
   balance: number;
 }
 
+type Scenario = "financiar" | "financiar_investir" | "alugar_investir";
+
 interface SimulationResult {
   // Financiamento
   financedAmount: number;
@@ -54,19 +56,26 @@ interface SimulationResult {
 
   // Aluguel + investimento
   totalRentPaid: number;
-  investmentFinalValue: number;
-  totalInvested: number;
+  rentingInvestmentFinal: number;
+  rentingTotalInvested: number;
 
-  // Comparação
-  financingNet: number; // valor do imóvel final - custo total do financiamento
-  rentingNet: number; // valor investido final - aluguel total pago
-  winner: "financiar" | "alugar" | "empate";
+  // Financiar + investir a diferença (quando parcela < aluguel)
+  financingInvestmentFinal: number;
+  financingTotalInvested: number;
+
+  // Patrimônio líquido final em cada cenário
+  netOnlyFinancing: number;
+  netFinancingInvesting: number;
+  netRentingInvesting: number;
+
+  winner: Scenario | "empate";
   difference: number;
 
   chart: {
-    label: string;
-    "Patrimônio Financiando": number;
-    "Patrimônio Alugando": number;
+    month: number;
+    "Só financiando": number;
+    "Financiando e investindo": number;
+    "Alugando e investindo": number;
   }[];
 
   months: number;
@@ -169,53 +178,85 @@ const RentVsBuyCalculator = () => {
       }
     }
 
-    // Cenário Aluguel + Investimento
-    // Investe a entrada + custos, e mensalmente investe a diferença (parcela - aluguel)
-    let investBalance = downPayment + otherCosts;
-    const totalInvestedStart = downPayment + otherCosts;
-    let totalInvestedExtra = 0;
+    // Cenário 1 — Só financiando: paga parcelas. Patrimônio = imóvel - saldo devedor.
+    // Cenário 2 — Financiando e investindo: paga parcelas e, quando a parcela for menor
+    //   que o aluguel de referência, investe a diferença (aluguel - parcela).
+    //   Patrimônio = imóvel + investimentos.
+    // Cenário 3 — Alugando e investindo: investe entrada+custos e, quando a parcela for
+    //   maior que o aluguel, investe a diferença (parcela - aluguel). Patrimônio = investimentos.
+
+    let rentingInvestBalance = downPayment + otherCosts;
+    const rentingInvestStart = downPayment + otherCosts;
+    let rentingExtraInvested = 0;
     let totalRentPaid = 0;
     let currentRent = monthlyRent;
 
-    const chart: SimulationResult["chart"] = [];
+    let financingInvestBalance = 0;
+    let financingExtraInvested = 0;
+
     let propertyValueNow = propertyValue;
 
-    const sampleStep = n > 60 ? 12 : n > 24 ? 6 : 1;
+    const chart: SimulationResult["chart"] = [];
+    const sampleStep = n > 240 ? 12 : n > 60 ? 6 : n > 24 ? 3 : 1;
+
+    // ponto inicial (mês 0)
+    chart.push({
+      month: 0,
+      "Só financiando": Number((propertyValue - principal).toFixed(2)),
+      "Financiando e investindo": Number(
+        (propertyValue - principal).toFixed(2),
+      ),
+      "Alugando e investindo": Number(rentingInvestBalance.toFixed(2)),
+    });
 
     for (let m = 1; m <= n; m++) {
       const installment = installments[m - 1];
-      // diferença mensal investida (pode ser negativa: nesse caso, saca do investimento)
-      const diff = installment - currentRent;
-      // rendimento do mês
-      investBalance = investBalance * (1 + monthlyInvRate) + diff;
-      if (diff > 0) totalInvestedExtra += diff;
+
+      // Aluguel + investimento
+      const diffRent = installment - currentRent; // se positivo, aluga e investe
+      rentingInvestBalance =
+        rentingInvestBalance * (1 + monthlyInvRate) + diffRent;
+      if (diffRent > 0) rentingExtraInvested += diffRent;
+
+      // Financiamento + investimento
+      const diffFin = currentRent - installment; // se positivo, parcela menor que aluguel: investe a diferença
+      const aporteFin = diffFin > 0 ? diffFin : 0;
+      financingInvestBalance =
+        financingInvestBalance * (1 + monthlyInvRate) + aporteFin;
+      financingExtraInvested += aporteFin;
+
       totalRentPaid += currentRent;
       currentRent = currentRent * (1 + monthlyRentAdj);
       propertyValueNow = propertyValueNow * (1 + monthlyApprRate);
 
       if (m % sampleStep === 0 || m === n) {
-        // Patrimônio do financiador: valor do imóvel - saldo devedor
-        const financierWealth = propertyValueNow - schedule[m - 1].balance;
+        const onlyFin = propertyValueNow - schedule[m - 1].balance;
+        const finInvest = onlyFin + financingInvestBalance;
         chart.push({
-          label: `Ano ${Math.ceil(m / 12)}`,
-          "Patrimônio Financiando": Number(financierWealth.toFixed(2)),
-          "Patrimônio Alugando": Number(investBalance.toFixed(2)),
+          month: m,
+          "Só financiando": Number(onlyFin.toFixed(2)),
+          "Financiando e investindo": Number(finInvest.toFixed(2)),
+          "Alugando e investindo": Number(rentingInvestBalance.toFixed(2)),
         });
       }
     }
 
-    const totalInvested = totalInvestedStart + totalInvestedExtra;
     const propertyFinalValue = propertyValueNow;
     const totalFinancingCost = downPayment + otherCosts + totalInstallments;
 
-    // Patrimônio líquido final em cada cenário
-    const financingNet = propertyFinalValue; // o imóvel já está quitado, e a entrada/custos/parcelas foram gastos
-    const rentingNet = investBalance; // dinheiro disponível ao final
+    const netOnlyFinancing = propertyFinalValue;
+    const netFinancingInvesting = propertyFinalValue + financingInvestBalance;
+    const netRentingInvesting = rentingInvestBalance;
 
-    let winner: SimulationResult["winner"] = "empate";
-    if (Math.abs(financingNet - rentingNet) < 1) winner = "empate";
-    else if (financingNet > rentingNet) winner = "financiar";
-    else winner = "alugar";
+    const nets: { key: Scenario; value: number }[] = [
+      { key: "financiar", value: netOnlyFinancing },
+      { key: "financiar_investir", value: netFinancingInvesting },
+      { key: "alugar_investir", value: netRentingInvesting },
+    ];
+    nets.sort((a, b) => b.value - a.value);
+    const winner: SimulationResult["winner"] =
+      Math.abs(nets[0].value - nets[1].value) < 1 ? "empate" : nets[0].key;
+    const difference = nets[0].value - nets[1].value;
 
     setResult({
       financedAmount: principal,
@@ -227,12 +268,15 @@ const RentVsBuyCalculator = () => {
       schedule,
       propertyFinalValue,
       totalRentPaid,
-      investmentFinalValue: investBalance,
-      totalInvested,
-      financingNet,
-      rentingNet,
+      rentingInvestmentFinal: rentingInvestBalance,
+      rentingTotalInvested: rentingInvestStart + rentingExtraInvested,
+      financingInvestmentFinal: financingInvestBalance,
+      financingTotalInvested: financingExtraInvested,
+      netOnlyFinancing,
+      netFinancingInvesting,
+      netRentingInvesting,
       winner,
-      difference: Math.abs(financingNet - rentingNet),
+      difference,
       chart,
       months: n,
     });
@@ -253,12 +297,18 @@ const RentVsBuyCalculator = () => {
     setError(null);
   };
 
+  const scenarioLabel = (s: Scenario): string => {
+    if (s === "financiar") return "Só financiar";
+    if (s === "financiar_investir") return "Financiar e investir";
+    return "Alugar e investir";
+  };
+
   const verdictText = useMemo(() => {
     if (!result) return "";
-    if (result.winner === "empate") return "Os dois cenários são equivalentes.";
-    if (result.winner === "financiar")
-      return `Financiar é mais vantajoso em ${formatBRL(result.difference)}.`;
-    return `Alugar e investir é mais vantajoso em ${formatBRL(result.difference)}.`;
+    if (result.winner === "empate") return "Os cenários são equivalentes.";
+    return `${scenarioLabel(result.winner)} é a opção mais vantajosa, com ${formatBRL(
+      result.difference,
+    )} a mais que a segunda colocada.`;
   }, [result]);
 
   const renderMoneyInput = (
@@ -446,11 +496,9 @@ const RentVsBuyCalculator = () => {
           {/* Veredito */}
           <div
             className={`rounded-lg border p-6 shadow-sm ${
-              result.winner === "alugar"
-                ? "border-primary/50 bg-[hsl(var(--brand-light))]"
-                : result.winner === "financiar"
-                  ? "border-primary/50 bg-[hsl(var(--brand-light))]"
-                  : "border-border bg-card"
+              result.winner === "empate"
+                ? "border-border bg-card"
+                : "border-primary/50 bg-[hsl(var(--brand-light))]"
             }`}
           >
             <p className="mb-1 text-sm font-medium uppercase tracking-wide text-muted-foreground">
@@ -466,11 +514,14 @@ const RentVsBuyCalculator = () => {
           </div>
 
           {/* Cards Resumo */}
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-3">
             <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
-              <h4 className="mb-4 text-lg font-bold text-foreground">
-                Cenário: Financiar
-              </h4>
+              <div className="mb-3 flex items-center gap-2">
+                <span className="h-3 w-3 rounded-full bg-[hsl(var(--chart-financing))]" />
+                <h4 className="text-base font-bold text-foreground">
+                  Só financiando
+                </h4>
+              </div>
               <dl className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <dt className="text-muted-foreground">Valor financiado</dt>
@@ -504,19 +555,66 @@ const RentVsBuyCalculator = () => {
                 </div>
                 <div className="flex justify-between border-t border-border pt-2">
                   <dt className="font-semibold text-foreground">
-                    Imóvel ao final
+                    Patrimônio final
                   </dt>
                   <dd className="font-bold text-primary">
-                    {formatBRL(result.propertyFinalValue)}
+                    {formatBRL(result.netOnlyFinancing)}
                   </dd>
                 </div>
               </dl>
             </div>
 
             <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
-              <h4 className="mb-4 text-lg font-bold text-foreground">
-                Cenário: Alugar e investir
-              </h4>
+              <div className="mb-3 flex items-center gap-2">
+                <span className="h-3 w-3 rounded-full bg-[hsl(var(--chart-financing-investing))]" />
+                <h4 className="text-base font-bold text-foreground">
+                  Financiando e investindo
+                </h4>
+              </div>
+              <dl className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <dt className="text-muted-foreground">Imóvel ao final</dt>
+                  <dd className="font-medium text-foreground">
+                    {formatBRL(result.propertyFinalValue)}
+                  </dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-muted-foreground">
+                    Total investido (extra)
+                  </dt>
+                  <dd className="font-medium text-foreground">
+                    {formatBRL(result.financingTotalInvested)}
+                  </dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-muted-foreground">
+                    Investimentos ao final
+                  </dt>
+                  <dd className="font-medium text-foreground">
+                    {formatBRL(result.financingInvestmentFinal)}
+                  </dd>
+                </div>
+                <div className="flex justify-between border-t border-border pt-2">
+                  <dt className="font-semibold text-foreground">
+                    Patrimônio final
+                  </dt>
+                  <dd className="font-bold text-primary">
+                    {formatBRL(result.netFinancingInvesting)}
+                  </dd>
+                </div>
+              </dl>
+              <p className="mt-3 text-xs text-muted-foreground">
+                Quando a parcela é menor que o aluguel, a diferença é investida.
+              </p>
+            </div>
+
+            <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="h-3 w-3 rounded-full bg-[hsl(var(--chart-renting))]" />
+                <h4 className="text-base font-bold text-foreground">
+                  Alugando e investindo
+                </h4>
+              </div>
               <dl className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <dt className="text-muted-foreground">
@@ -535,15 +633,15 @@ const RentVsBuyCalculator = () => {
                 <div className="flex justify-between">
                   <dt className="text-muted-foreground">Total investido</dt>
                   <dd className="font-medium text-foreground">
-                    {formatBRL(result.totalInvested)}
+                    {formatBRL(result.rentingTotalInvested)}
                   </dd>
                 </div>
                 <div className="flex justify-between border-t border-border pt-2">
                   <dt className="font-semibold text-foreground">
-                    Patrimônio ao final
+                    Patrimônio final
                   </dt>
                   <dd className="font-bold text-primary">
-                    {formatBRL(result.investmentFinalValue)}
+                    {formatBRL(result.netRentingInvesting)}
                   </dd>
                 </div>
               </dl>
@@ -555,16 +653,28 @@ const RentVsBuyCalculator = () => {
             <h4 className="mb-4 text-lg font-bold text-foreground">
               Evolução do patrimônio
             </h4>
-            <div className="h-72 w-full">
+            <div className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={result.chart}>
+                <LineChart
+                  data={result.chart}
+                  margin={{ top: 10, right: 20, left: 0, bottom: 20 }}
+                >
                   <CartesianGrid
                     strokeDasharray="3 3"
                     stroke="hsl(var(--border))"
                   />
                   <XAxis
-                    dataKey="label"
+                    dataKey="month"
+                    type="number"
+                    domain={[0, result.months]}
                     tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+                    label={{
+                      value: "Meses",
+                      position: "insideBottom",
+                      offset: -10,
+                      fill: "hsl(var(--muted-foreground))",
+                      fontSize: 12,
+                    }}
                   />
                   <YAxis
                     tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
@@ -576,6 +686,7 @@ const RentVsBuyCalculator = () => {
                   />
                   <Tooltip
                     formatter={(v: number) => formatBRL(v)}
+                    labelFormatter={(l) => `Mês ${l}`}
                     contentStyle={{
                       backgroundColor: "hsl(var(--card))",
                       border: "1px solid hsl(var(--border))",
@@ -585,24 +696,33 @@ const RentVsBuyCalculator = () => {
                   <Legend />
                   <Line
                     type="monotone"
-                    dataKey="Patrimônio Financiando"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={2}
+                    dataKey="Só financiando"
+                    stroke="hsl(var(--chart-financing))"
+                    strokeWidth={2.5}
                     dot={false}
                   />
                   <Line
                     type="monotone"
-                    dataKey="Patrimônio Alugando"
-                    stroke="hsl(var(--accent-foreground))"
-                    strokeWidth={2}
+                    dataKey="Financiando e investindo"
+                    stroke="hsl(var(--chart-financing-investing))"
+                    strokeWidth={2.5}
+                    dot={false}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="Alugando e investindo"
+                    stroke="hsl(var(--chart-renting))"
+                    strokeWidth={2.5}
                     dot={false}
                   />
                 </LineChart>
               </ResponsiveContainer>
             </div>
             <p className="mt-3 text-xs text-muted-foreground">
-              Patrimônio Financiando = valor de mercado do imóvel menos saldo
-              devedor. Patrimônio Alugando = valor acumulado dos investimentos.
+              Só financiando: valor de mercado do imóvel menos saldo devedor.
+              Financiando e investindo: imóvel + investimentos da diferença
+              parcela vs aluguel. Alugando e investindo: entrada e custos
+              investidos + diferença mensal.
             </p>
           </div>
         </div>
