@@ -297,12 +297,18 @@ const RentVsBuyCalculator = () => {
     setError(null);
   };
 
+  const scenarioLabel = (s: Scenario): string => {
+    if (s === "financiar") return "Só financiar";
+    if (s === "financiar_investir") return "Financiar e investir";
+    return "Alugar e investir";
+  };
+
   const verdictText = useMemo(() => {
     if (!result) return "";
-    if (result.winner === "empate") return "Os dois cenários são equivalentes.";
-    if (result.winner === "financiar")
-      return `Financiar é mais vantajoso em ${formatBRL(result.difference)}.`;
-    return `Alugar e investir é mais vantajoso em ${formatBRL(result.difference)}.`;
+    if (result.winner === "empate") return "Os cenários são equivalentes.";
+    return `${scenarioLabel(result.winner)} é a opção mais vantajosa, com ${formatBRL(
+      result.difference,
+    )} a mais que a segunda colocada.`;
   }, [result]);
 
   const renderMoneyInput = (
