@@ -178,53 +178,85 @@ const RentVsBuyCalculator = () => {
       }
     }
 
-    // Cenário Aluguel + Investimento
-    // Investe a entrada + custos, e mensalmente investe a diferença (parcela - aluguel)
-    let investBalance = downPayment + otherCosts;
-    const totalInvestedStart = downPayment + otherCosts;
-    let totalInvestedExtra = 0;
+    // Cenário 1 — Só financiando: paga parcelas. Patrimônio = imóvel - saldo devedor.
+    // Cenário 2 — Financiando e investindo: paga parcelas e, quando a parcela for menor
+    //   que o aluguel de referência, investe a diferença (aluguel - parcela).
+    //   Patrimônio = imóvel + investimentos.
+    // Cenário 3 — Alugando e investindo: investe entrada+custos e, quando a parcela for
+    //   maior que o aluguel, investe a diferença (parcela - aluguel). Patrimônio = investimentos.
+
+    let rentingInvestBalance = downPayment + otherCosts;
+    const rentingInvestStart = downPayment + otherCosts;
+    let rentingExtraInvested = 0;
     let totalRentPaid = 0;
     let currentRent = monthlyRent;
 
-    const chart: SimulationResult["chart"] = [];
+    let financingInvestBalance = 0;
+    let financingExtraInvested = 0;
+
     let propertyValueNow = propertyValue;
 
-    const sampleStep = n > 60 ? 12 : n > 24 ? 6 : 1;
+    const chart: SimulationResult["chart"] = [];
+    const sampleStep = n > 240 ? 12 : n > 60 ? 6 : n > 24 ? 3 : 1;
+
+    // ponto inicial (mês 0)
+    chart.push({
+      month: 0,
+      "Só financiando": Number((propertyValue - principal).toFixed(2)),
+      "Financiando e investindo": Number(
+        (propertyValue - principal).toFixed(2),
+      ),
+      "Alugando e investindo": Number(rentingInvestBalance.toFixed(2)),
+    });
 
     for (let m = 1; m <= n; m++) {
       const installment = installments[m - 1];
-      // diferença mensal investida (pode ser negativa: nesse caso, saca do investimento)
-      const diff = installment - currentRent;
-      // rendimento do mês
-      investBalance = investBalance * (1 + monthlyInvRate) + diff;
-      if (diff > 0) totalInvestedExtra += diff;
+
+      // Aluguel + investimento
+      const diffRent = installment - currentRent; // se positivo, aluga e investe
+      rentingInvestBalance =
+        rentingInvestBalance * (1 + monthlyInvRate) + diffRent;
+      if (diffRent > 0) rentingExtraInvested += diffRent;
+
+      // Financiamento + investimento
+      const diffFin = currentRent - installment; // se positivo, parcela menor que aluguel: investe a diferença
+      const aporteFin = diffFin > 0 ? diffFin : 0;
+      financingInvestBalance =
+        financingInvestBalance * (1 + monthlyInvRate) + aporteFin;
+      financingExtraInvested += aporteFin;
+
       totalRentPaid += currentRent;
       currentRent = currentRent * (1 + monthlyRentAdj);
       propertyValueNow = propertyValueNow * (1 + monthlyApprRate);
 
       if (m % sampleStep === 0 || m === n) {
-        // Patrimônio do financiador: valor do imóvel - saldo devedor
-        const financierWealth = propertyValueNow - schedule[m - 1].balance;
+        const onlyFin = propertyValueNow - schedule[m - 1].balance;
+        const finInvest = onlyFin + financingInvestBalance;
         chart.push({
-          label: `Ano ${Math.ceil(m / 12)}`,
-          "Patrimônio Financiando": Number(financierWealth.toFixed(2)),
-          "Patrimônio Alugando": Number(investBalance.toFixed(2)),
+          month: m,
+          "Só financiando": Number(onlyFin.toFixed(2)),
+          "Financiando e investindo": Number(finInvest.toFixed(2)),
+          "Alugando e investindo": Number(rentingInvestBalance.toFixed(2)),
         });
       }
     }
 
-    const totalInvested = totalInvestedStart + totalInvestedExtra;
     const propertyFinalValue = propertyValueNow;
     const totalFinancingCost = downPayment + otherCosts + totalInstallments;
 
-    // Patrimônio líquido final em cada cenário
-    const financingNet = propertyFinalValue; // o imóvel já está quitado, e a entrada/custos/parcelas foram gastos
-    const rentingNet = investBalance; // dinheiro disponível ao final
+    const netOnlyFinancing = propertyFinalValue;
+    const netFinancingInvesting = propertyFinalValue + financingInvestBalance;
+    const netRentingInvesting = rentingInvestBalance;
 
-    let winner: SimulationResult["winner"] = "empate";
-    if (Math.abs(financingNet - rentingNet) < 1) winner = "empate";
-    else if (financingNet > rentingNet) winner = "financiar";
-    else winner = "alugar";
+    const nets: { key: Scenario; value: number }[] = [
+      { key: "financiar", value: netOnlyFinancing },
+      { key: "financiar_investir", value: netFinancingInvesting },
+      { key: "alugar_investir", value: netRentingInvesting },
+    ];
+    nets.sort((a, b) => b.value - a.value);
+    const winner: SimulationResult["winner"] =
+      Math.abs(nets[0].value - nets[1].value) < 1 ? "empate" : nets[0].key;
+    const difference = nets[0].value - nets[1].value;
 
     setResult({
       financedAmount: principal,
@@ -236,12 +268,15 @@ const RentVsBuyCalculator = () => {
       schedule,
       propertyFinalValue,
       totalRentPaid,
-      investmentFinalValue: investBalance,
-      totalInvested,
-      financingNet,
-      rentingNet,
+      rentingInvestmentFinal: rentingInvestBalance,
+      rentingTotalInvested: rentingInvestStart + rentingExtraInvested,
+      financingInvestmentFinal: financingInvestBalance,
+      financingTotalInvested: financingExtraInvested,
+      netOnlyFinancing,
+      netFinancingInvesting,
+      netRentingInvesting,
       winner,
-      difference: Math.abs(financingNet - rentingNet),
+      difference,
       chart,
       months: n,
     });
