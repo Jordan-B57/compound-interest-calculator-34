@@ -496,11 +496,9 @@ const RentVsBuyCalculator = () => {
           {/* Veredito */}
           <div
             className={`rounded-lg border p-6 shadow-sm ${
-              result.winner === "alugar"
-                ? "border-primary/50 bg-[hsl(var(--brand-light))]"
-                : result.winner === "financiar"
-                  ? "border-primary/50 bg-[hsl(var(--brand-light))]"
-                  : "border-border bg-card"
+              result.winner === "empate"
+                ? "border-border bg-card"
+                : "border-primary/50 bg-[hsl(var(--brand-light))]"
             }`}
           >
             <p className="mb-1 text-sm font-medium uppercase tracking-wide text-muted-foreground">
@@ -516,11 +514,14 @@ const RentVsBuyCalculator = () => {
           </div>
 
           {/* Cards Resumo */}
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-3">
             <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
-              <h4 className="mb-4 text-lg font-bold text-foreground">
-                Cenário: Financiar
-              </h4>
+              <div className="mb-3 flex items-center gap-2">
+                <span className="h-3 w-3 rounded-full bg-[hsl(var(--chart-financing))]" />
+                <h4 className="text-base font-bold text-foreground">
+                  Só financiando
+                </h4>
+              </div>
               <dl className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <dt className="text-muted-foreground">Valor financiado</dt>
@@ -554,19 +555,66 @@ const RentVsBuyCalculator = () => {
                 </div>
                 <div className="flex justify-between border-t border-border pt-2">
                   <dt className="font-semibold text-foreground">
-                    Imóvel ao final
+                    Patrimônio final
                   </dt>
                   <dd className="font-bold text-primary">
-                    {formatBRL(result.propertyFinalValue)}
+                    {formatBRL(result.netOnlyFinancing)}
                   </dd>
                 </div>
               </dl>
             </div>
 
             <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
-              <h4 className="mb-4 text-lg font-bold text-foreground">
-                Cenário: Alugar e investir
-              </h4>
+              <div className="mb-3 flex items-center gap-2">
+                <span className="h-3 w-3 rounded-full bg-[hsl(var(--chart-financing-investing))]" />
+                <h4 className="text-base font-bold text-foreground">
+                  Financiando e investindo
+                </h4>
+              </div>
+              <dl className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <dt className="text-muted-foreground">Imóvel ao final</dt>
+                  <dd className="font-medium text-foreground">
+                    {formatBRL(result.propertyFinalValue)}
+                  </dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-muted-foreground">
+                    Total investido (extra)
+                  </dt>
+                  <dd className="font-medium text-foreground">
+                    {formatBRL(result.financingTotalInvested)}
+                  </dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-muted-foreground">
+                    Investimentos ao final
+                  </dt>
+                  <dd className="font-medium text-foreground">
+                    {formatBRL(result.financingInvestmentFinal)}
+                  </dd>
+                </div>
+                <div className="flex justify-between border-t border-border pt-2">
+                  <dt className="font-semibold text-foreground">
+                    Patrimônio final
+                  </dt>
+                  <dd className="font-bold text-primary">
+                    {formatBRL(result.netFinancingInvesting)}
+                  </dd>
+                </div>
+              </dl>
+              <p className="mt-3 text-xs text-muted-foreground">
+                Quando a parcela é menor que o aluguel, a diferença é investida.
+              </p>
+            </div>
+
+            <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="h-3 w-3 rounded-full bg-[hsl(var(--chart-renting))]" />
+                <h4 className="text-base font-bold text-foreground">
+                  Alugando e investindo
+                </h4>
+              </div>
               <dl className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <dt className="text-muted-foreground">
@@ -585,15 +633,15 @@ const RentVsBuyCalculator = () => {
                 <div className="flex justify-between">
                   <dt className="text-muted-foreground">Total investido</dt>
                   <dd className="font-medium text-foreground">
-                    {formatBRL(result.totalInvested)}
+                    {formatBRL(result.rentingTotalInvested)}
                   </dd>
                 </div>
                 <div className="flex justify-between border-t border-border pt-2">
                   <dt className="font-semibold text-foreground">
-                    Patrimônio ao final
+                    Patrimônio final
                   </dt>
                   <dd className="font-bold text-primary">
-                    {formatBRL(result.investmentFinalValue)}
+                    {formatBRL(result.netRentingInvesting)}
                   </dd>
                 </div>
               </dl>
@@ -605,16 +653,28 @@ const RentVsBuyCalculator = () => {
             <h4 className="mb-4 text-lg font-bold text-foreground">
               Evolução do patrimônio
             </h4>
-            <div className="h-72 w-full">
+            <div className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={result.chart}>
+                <LineChart
+                  data={result.chart}
+                  margin={{ top: 10, right: 20, left: 0, bottom: 20 }}
+                >
                   <CartesianGrid
                     strokeDasharray="3 3"
                     stroke="hsl(var(--border))"
                   />
                   <XAxis
-                    dataKey="label"
+                    dataKey="month"
+                    type="number"
+                    domain={[0, result.months]}
                     tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+                    label={{
+                      value: "Meses",
+                      position: "insideBottom",
+                      offset: -10,
+                      fill: "hsl(var(--muted-foreground))",
+                      fontSize: 12,
+                    }}
                   />
                   <YAxis
                     tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
@@ -626,6 +686,7 @@ const RentVsBuyCalculator = () => {
                   />
                   <Tooltip
                     formatter={(v: number) => formatBRL(v)}
+                    labelFormatter={(l) => `Mês ${l}`}
                     contentStyle={{
                       backgroundColor: "hsl(var(--card))",
                       border: "1px solid hsl(var(--border))",
@@ -635,24 +696,33 @@ const RentVsBuyCalculator = () => {
                   <Legend />
                   <Line
                     type="monotone"
-                    dataKey="Patrimônio Financiando"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={2}
+                    dataKey="Só financiando"
+                    stroke="hsl(var(--chart-financing))"
+                    strokeWidth={2.5}
                     dot={false}
                   />
                   <Line
                     type="monotone"
-                    dataKey="Patrimônio Alugando"
-                    stroke="hsl(var(--accent-foreground))"
-                    strokeWidth={2}
+                    dataKey="Financiando e investindo"
+                    stroke="hsl(var(--chart-financing-investing))"
+                    strokeWidth={2.5}
+                    dot={false}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="Alugando e investindo"
+                    stroke="hsl(var(--chart-renting))"
+                    strokeWidth={2.5}
                     dot={false}
                   />
                 </LineChart>
               </ResponsiveContainer>
             </div>
             <p className="mt-3 text-xs text-muted-foreground">
-              Patrimônio Financiando = valor de mercado do imóvel menos saldo
-              devedor. Patrimônio Alugando = valor acumulado dos investimentos.
+              Só financiando: valor de mercado do imóvel menos saldo devedor.
+              Financiando e investindo: imóvel + investimentos da diferença
+              parcela vs aluguel. Alugando e investindo: entrada e custos
+              investidos + diferença mensal.
             </p>
           </div>
         </div>
