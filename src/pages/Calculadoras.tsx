@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { TrendingUp, Trophy, ArrowRight } from "lucide-react";
+import { TrendingUp, Trophy, Home, ArrowRight } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
@@ -18,6 +18,14 @@ const calculadoras = [
     description:
       "Descubra em quanto tempo você atinge R$ 1 milhão ou qual aporte mensal é necessário para chegar lá.",
     icon: Trophy,
+    available: true,
+  },
+  {
+    slug: "alugar-x-financiar",
+    title: "Calculadora Alugar x Financiar",
+    description:
+      "Compare financiar um imóvel com alugar e investir a diferença. Veja qual opção gera mais patrimônio.",
+    icon: Home,
     available: true,
   },
 ];
