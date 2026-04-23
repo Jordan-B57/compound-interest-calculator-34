@@ -41,6 +41,8 @@ interface MonthRow {
   balance: number;
 }
 
+type Scenario = "financiar" | "financiar_investir" | "alugar_investir";
+
 interface SimulationResult {
   // Financiamento
   financedAmount: number;
@@ -54,19 +56,26 @@ interface SimulationResult {
 
   // Aluguel + investimento
   totalRentPaid: number;
-  investmentFinalValue: number;
-  totalInvested: number;
+  rentingInvestmentFinal: number;
+  rentingTotalInvested: number;
 
-  // Comparação
-  financingNet: number; // valor do imóvel final - custo total do financiamento
-  rentingNet: number; // valor investido final - aluguel total pago
-  winner: "financiar" | "alugar" | "empate";
+  // Financiar + investir a diferença (quando parcela < aluguel)
+  financingInvestmentFinal: number;
+  financingTotalInvested: number;
+
+  // Patrimônio líquido final em cada cenário
+  netOnlyFinancing: number;
+  netFinancingInvesting: number;
+  netRentingInvesting: number;
+
+  winner: Scenario | "empate";
   difference: number;
 
   chart: {
-    label: string;
-    "Patrimônio Financiando": number;
-    "Patrimônio Alugando": number;
+    month: number;
+    "Só financiando": number;
+    "Financiando e investindo": number;
+    "Alugando e investindo": number;
   }[];
 
   months: number;
