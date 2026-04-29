@@ -8,6 +8,7 @@ import Calculadoras from "./pages/Calculadoras.tsx";
 import JurosCompostos from "./pages/JurosCompostos.tsx";
 import PrimeiroMilhao from "./pages/PrimeiroMilhao.tsx";
 import AlugarXFinanciar from "./pages/AlugarXFinanciar.tsx";
+import Financiamento from "./pages/Financiamento.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/calculadoras/juros-compostos" element={<JurosCompostos />} />
           <Route path="/calculadoras/primeiro-milhao" element={<PrimeiroMilhao />} />
           <Route path="/calculadoras/alugar-x-financiar" element={<AlugarXFinanciar />} />
+          <Route path="/calculadoras/financiamento" element={<Financiamento />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
