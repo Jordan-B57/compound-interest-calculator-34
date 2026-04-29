@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { TrendingUp, Trophy, Home, ArrowRight } from "lucide-react";
+import { TrendingUp, Trophy, Home, Building2, ArrowRight } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
@@ -26,6 +26,14 @@ const calculadoras = [
     description:
       "Compare financiar um imóvel com alugar e investir a diferença. Veja qual opção gera mais patrimônio.",
     icon: Home,
+    available: true,
+  },
+  {
+    slug: "financiamento",
+    title: "Simulador de Financiamento",
+    description:
+      "Compare os sistemas SAC e Price lado a lado e veja parcelas, juros e saldo devedor com gráficos.",
+    icon: Building2,
     available: true,
   },
 ];
