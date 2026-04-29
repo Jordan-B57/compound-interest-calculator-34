@@ -43,33 +43,37 @@ const Calculadoras = () => {
     <div className="min-h-screen bg-background">
       <SiteHeader />
 
-      <main className="container mx-auto max-w-5xl px-4 py-8 md:py-12">
-        <h1 className="mb-2 text-3xl font-bold text-foreground md:text-4xl">
-          Calculadoras
+      <main className="container mx-auto max-w-6xl px-4 py-16 md:py-24">
+        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+          Ferramentas
+        </p>
+        <h1 className="mb-4 font-display text-4xl leading-tight text-foreground md:text-6xl">
+          Calculadoras gratuitas
         </h1>
-        <p className="mb-8 text-muted-foreground">
-          Ferramentas gratuitas para te ajudar a planejar suas finanças. Escolha
-          uma calculadora abaixo.
+        <p className="mb-12 max-w-2xl text-foreground/70 md:text-lg">
+          Ferramentas pensadas para te ajudar a planejar suas finanças com
+          clareza. Escolha uma calculadora abaixo.
         </p>
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {calculadoras.map((c) => {
             const Icon = c.icon;
             const card = (
-              <div className="group flex h-full flex-col rounded-xl border border-border bg-card p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-md">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-[hsl(var(--brand-light))] text-primary">
-                  <Icon className="h-6 w-6" />
+              <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/60 bg-card-gradient p-7 transition-all hover:-translate-y-1 hover:border-primary/60">
+                <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
+                  <Icon className="h-5 w-5" />
                 </div>
-                <h2 className="mb-2 text-lg font-bold text-foreground">
+                <h2 className="mb-3 text-lg font-semibold text-foreground">
                   {c.title}
                 </h2>
-                <p className="mb-6 flex-1 text-sm text-muted-foreground">
+                <p className="mb-8 flex-1 text-sm leading-relaxed text-foreground/70">
                   {c.description}
                 </p>
                 <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
                   Acessar
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </span>
+                <div className="pointer-events-none absolute -bottom-20 -right-20 h-40 w-40 rounded-full bg-primary/10 opacity-0 blur-3xl transition-opacity group-hover:opacity-100" />
               </div>
             );
 
