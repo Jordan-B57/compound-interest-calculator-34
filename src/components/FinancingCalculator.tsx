@@ -50,6 +50,7 @@ interface SystemResult {
 
 interface SimulationResult {
   financedAmount: number;
+  downPayment: number;
   months: number;
   sac: SystemResult;
   price: SystemResult;
