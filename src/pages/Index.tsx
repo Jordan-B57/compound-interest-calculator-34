@@ -258,7 +258,7 @@ const Index = () => {
       </section>
 
       {/* PROCESSO */}
-      <section id="processo" className="section-light border-t border-light-border">
+      <section id="processo" className="section-light">
         <div className="container mx-auto px-4 py-24 md:py-32">
         <div className="mb-16 max-w-3xl">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-primary">
