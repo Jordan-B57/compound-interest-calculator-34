@@ -198,6 +198,7 @@ const FinancingCalculator = () => {
 
     setResult({
       financedAmount,
+      downPayment,
       months,
       sac,
       price,
