@@ -269,29 +269,52 @@ const FinancingCalculator = () => {
 
           <div>
             <label className="mb-1.5 block text-sm font-medium text-foreground">
-              Prazo (anos)
+              Prazo
             </label>
-            <input
-              type="number"
-              min={1}
-              max={50}
-              value={years}
-              onChange={(e) => setYears(Number(e.target.value) || 0)}
-              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            />
+            <div className="flex gap-2">
+              <input
+                type="number"
+                min={1}
+                value={term}
+                onChange={(e) => setTerm(Number(e.target.value) || 0)}
+                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
+              <select
+                value={termUnit}
+                onChange={(e) =>
+                  setTermUnit(e.target.value as "anos" | "meses")
+                }
+                className="h-10 rounded-md border border-input bg-background px-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <option value="anos">anos</option>
+                <option value="meses">meses</option>
+              </select>
+            </div>
           </div>
 
           <div>
             <label className="mb-1.5 block text-sm font-medium text-foreground">
-              Taxa de juros anual (%)
+              Taxa de juros (%)
             </label>
-            <input
-              type="number"
-              step="0.01"
-              value={annualRate}
-              onChange={(e) => setAnnualRate(Number(e.target.value) || 0)}
-              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            />
+            <div className="flex gap-2">
+              <input
+                type="number"
+                step="0.01"
+                value={rate}
+                onChange={(e) => setRate(Number(e.target.value) || 0)}
+                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
+              <select
+                value={rateUnit}
+                onChange={(e) =>
+                  setRateUnit(e.target.value as "anual" | "mensal")
+                }
+                className="h-10 rounded-md border border-input bg-background px-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <option value="anual">ao ano</option>
+                <option value="mensal">ao mês</option>
+              </select>
+            </div>
           </div>
         </div>
 
