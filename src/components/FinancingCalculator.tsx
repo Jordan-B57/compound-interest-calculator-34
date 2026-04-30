@@ -328,7 +328,7 @@ const FinancingCalculator = () => {
         <Button
           onClick={handleCalculate}
           className="mt-6 w-full md:w-auto"
-          disabled={financedAmount <= 0 || years <= 0 || annualRate < 0}
+          disabled={financedAmount <= 0 || term <= 0 || rate < 0}
         >
           Calcular
         </Button>
