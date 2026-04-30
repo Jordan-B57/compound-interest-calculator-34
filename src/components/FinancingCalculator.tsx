@@ -155,8 +155,14 @@ const FinancingCalculator = () => {
   );
 
   const handleCalculate = () => {
-    const months = Math.max(1, Math.round(years * 12));
-    const monthlyRate = Math.pow(1 + annualRate / 100, 1 / 12) - 1;
+    const months = Math.max(
+      1,
+      Math.round(termUnit === "anos" ? term * 12 : term),
+    );
+    const monthlyRate =
+      rateUnit === "anual"
+        ? Math.pow(1 + rate / 100, 1 / 12) - 1
+        : rate / 100;
 
     const sac = simulateSAC(financedAmount, monthlyRate, months);
     const price = simulatePrice(financedAmount, monthlyRate, months);
