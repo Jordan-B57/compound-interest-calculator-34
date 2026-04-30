@@ -50,6 +50,7 @@ interface SystemResult {
 
 interface SimulationResult {
   financedAmount: number;
+  downPayment: number;
   months: number;
   sac: SystemResult;
   price: SystemResult;
@@ -197,6 +198,7 @@ const FinancingCalculator = () => {
 
     setResult({
       financedAmount,
+      downPayment,
       months,
       sac,
       price,
@@ -360,6 +362,12 @@ const FinancingCalculator = () => {
               <h3 className="mb-4 text-lg font-bold text-foreground">SAC</h3>
               <dl className="space-y-3 text-sm">
                 <div className="flex justify-between">
+                  <dt className="text-muted-foreground">Entrada</dt>
+                  <dd className="font-semibold text-foreground">
+                    {formatBRL(result.downPayment)}
+                  </dd>
+                </div>
+                <div className="flex justify-between">
                   <dt className="text-muted-foreground">Primeira parcela</dt>
                   <dd className="font-semibold text-foreground">
                     {formatBRL(result.sac.firstInstallment)}
@@ -377,10 +385,18 @@ const FinancingCalculator = () => {
                     {formatBRL(result.sac.totalInterest)}
                   </dd>
                 </div>
-                <div className="flex justify-between border-t border-border pt-3">
-                  <dt className="text-muted-foreground">Total pago</dt>
-                  <dd className="font-bold text-primary">
+                <div className="flex justify-between">
+                  <dt className="text-muted-foreground">Soma das parcelas</dt>
+                  <dd className="font-semibold text-foreground">
                     {formatBRL(result.sac.totalPaid)}
+                  </dd>
+                </div>
+                <div className="flex justify-between border-t border-border pt-3">
+                  <dt className="text-muted-foreground">
+                    Total pago (entrada + parcelas)
+                  </dt>
+                  <dd className="font-bold text-primary">
+                    {formatBRL(result.sac.totalPaid + result.downPayment)}
                   </dd>
                 </div>
               </dl>
@@ -389,6 +405,12 @@ const FinancingCalculator = () => {
             <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
               <h3 className="mb-4 text-lg font-bold text-foreground">Price</h3>
               <dl className="space-y-3 text-sm">
+                <div className="flex justify-between">
+                  <dt className="text-muted-foreground">Entrada</dt>
+                  <dd className="font-semibold text-foreground">
+                    {formatBRL(result.downPayment)}
+                  </dd>
+                </div>
                 <div className="flex justify-between">
                   <dt className="text-muted-foreground">Parcela fixa</dt>
                   <dd className="font-semibold text-foreground">
@@ -407,10 +429,18 @@ const FinancingCalculator = () => {
                     {formatBRL(result.price.totalInterest)}
                   </dd>
                 </div>
-                <div className="flex justify-between border-t border-border pt-3">
-                  <dt className="text-muted-foreground">Total pago</dt>
-                  <dd className="font-bold text-primary">
+                <div className="flex justify-between">
+                  <dt className="text-muted-foreground">Soma das parcelas</dt>
+                  <dd className="font-semibold text-foreground">
                     {formatBRL(result.price.totalPaid)}
+                  </dd>
+                </div>
+                <div className="flex justify-between border-t border-border pt-3">
+                  <dt className="text-muted-foreground">
+                    Total pago (entrada + parcelas)
+                  </dt>
+                  <dd className="font-bold text-primary">
+                    {formatBRL(result.price.totalPaid + result.downPayment)}
                   </dd>
                 </div>
               </dl>
