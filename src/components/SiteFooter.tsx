@@ -7,9 +7,9 @@ const SiteFooter = () => (
       <div className="grid gap-12 md:grid-cols-12">
         <div className="md:col-span-5">
           <Link to="/" className="flex items-center gap-2.5">
-            <span className="font-display text-3xl text-primary">p</span>
+            <span className="font-display text-3xl text-primary">D</span>
             <span className="text-base font-semibold tracking-tight">
-              planejamento<span className="text-primary">.</span>
+              Davyd Dunda<span className="text-primary">.</span>
             </span>
           </Link>
           <p className="mt-5 max-w-md font-display text-2xl leading-tight text-foreground md:text-3xl">

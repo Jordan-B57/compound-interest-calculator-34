@@ -145,12 +145,11 @@ const Index = () => {
           </div>
 
           {/* Stats */}
-          <div className="mt-20 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border/40 bg-border/40 md:mt-28 md:grid-cols-4">
+          <div className="mt-20 grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-border/40 bg-border/40 md:mt-28">
             {[
               { v: "+5 anos", l: "no mercado financeiro" },
               { v: "100%", l: "atendimento personalizado" },
               { v: "3 frentes", l: "organização, plano e blindagem" },
-              { v: "0 comissão", l: "consultoria independente" },
             ].map((s) => (
               <div key={s.l} className="bg-background p-6 md:p-8">
                 <p className="font-display text-3xl text-primary md:text-4xl">{s.v}</p>
