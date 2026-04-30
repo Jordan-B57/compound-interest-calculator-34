@@ -11,77 +11,76 @@
 
 @layer base {
   :root {
-    /* Paleta W1: dark teal/petróleo + turquesa suave + branco/cinza */
-    --background: 195 35% 8%;
-    --foreground: 180 15% 94%;
+    /* Paleta W1 fiel: dark teal profundo + turquesa #5FE3C9 */
+    --background: 190 50% 6%;
+    --foreground: 180 20% 96%;
 
-    --card: 195 30% 10%;
-    --card-foreground: 180 15% 94%;
+    --card: 190 45% 8%;
+    --card-foreground: 180 20% 96%;
 
-    --popover: 195 30% 10%;
-    --popover-foreground: 180 15% 94%;
+    --popover: 190 45% 8%;
+    --popover-foreground: 180 20% 96%;
 
-    /* Turquesa/verde-água suave (W1 accent) */
-    --primary: 168 35% 65%;
-    --primary-foreground: 195 40% 10%;
+    /* Turquesa W1 (#5FE3C9 ~ hsl(168, 70%, 63%)) */
+    --primary: 168 70% 63%;
+    --primary-foreground: 190 60% 8%;
 
-    --secondary: 195 25% 14%;
-    --secondary-foreground: 180 15% 94%;
+    --secondary: 190 35% 12%;
+    --secondary-foreground: 180 20% 96%;
 
-    --muted: 195 20% 14%;
-    --muted-foreground: 195 10% 65%;
+    --muted: 190 30% 12%;
+    --muted-foreground: 190 12% 68%;
 
-    --accent: 168 35% 65%;
-    --accent-foreground: 195 40% 10%;
+    --accent: 168 70% 63%;
+    --accent-foreground: 190 60% 8%;
 
     /* Tokens de marca */
-    --brand-dark: 195 40% 6%;
-    --brand: 168 35% 65%;
-    --brand-glow: 168 45% 75%;
-    --brand-light: 195 25% 16%;
-    --surface: 195 30% 11%;
-    --surface-elevated: 195 25% 14%;
+    --brand-dark: 190 60% 4%;
+    --brand: 168 70% 63%;
+    --brand-glow: 168 80% 75%;
+    --brand-light: 190 35% 14%;
+    --surface: 190 40% 9%;
+    --surface-elevated: 190 35% 12%;
 
     /* Tons claros (seções brancas/cinza estilo W1) */
     --light-bg: 200 25% 96%;
-    --light-foreground: 200 30% 12%;
-    --light-muted: 200 15% 45%;
+    --light-foreground: 200 35% 10%;
+    --light-muted: 200 12% 42%;
     --light-border: 200 15% 88%;
 
     /* Cores dos gráficos comparativos */
-    --chart-financing: 168 35% 65%;
+    --chart-financing: 168 70% 63%;
     --chart-financing-investing: 38 80% 60%;
     --chart-renting: 200 15% 65%;
 
     --destructive: 0 65% 55%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 195 20% 18%;
-    --input: 195 20% 18%;
-    --ring: 168 35% 65%;
+    --border: 190 25% 16%;
+    --input: 190 25% 16%;
+    --ring: 168 70% 63%;
 
     --radius: 0.75rem;
 
-    /* Gradientes inspirados no hero da W1 */
-    --gradient-hero: radial-gradient(ellipse at 75% 50%, hsl(168 40% 25% / 0.55), transparent 60%),
-                     radial-gradient(ellipse at 20% 80%, hsl(190 50% 18% / 0.4), transparent 55%),
-                     linear-gradient(180deg, hsl(195 35% 8%), hsl(195 40% 6%));
-    --gradient-text: linear-gradient(135deg, hsl(180 15% 96%), hsl(168 40% 75%));
-    --gradient-card: linear-gradient(160deg, hsl(195 30% 11%), hsl(195 35% 8%));
+    /* Gradientes (sutil glow no canto, sem ondas) */
+    --gradient-hero: radial-gradient(ellipse 70% 60% at 80% 50%, hsl(168 70% 35% / 0.45), transparent 65%),
+                     linear-gradient(180deg, hsl(190 50% 6%), hsl(190 55% 5%));
+    --gradient-text: linear-gradient(135deg, hsl(180 20% 96%), hsl(168 70% 75%));
+    --gradient-card: linear-gradient(160deg, hsl(190 40% 9%), hsl(190 50% 6%));
 
     /* Sombras */
-    --shadow-glow: 0 0 60px hsl(168 40% 50% / 0.25);
+    --shadow-glow: 0 0 60px hsl(168 70% 50% / 0.3);
     --shadow-elevated: 0 20px 50px -20px hsl(0 0% 0% / 0.5);
 
     /* Sidebar */
-    --sidebar-background: 195 35% 8%;
-    --sidebar-foreground: 180 15% 94%;
-    --sidebar-primary: 168 35% 65%;
-    --sidebar-primary-foreground: 195 40% 10%;
-    --sidebar-accent: 195 25% 14%;
-    --sidebar-accent-foreground: 180 15% 94%;
-    --sidebar-border: 195 20% 18%;
-    --sidebar-ring: 168 35% 65%;
+    --sidebar-background: 190 50% 6%;
+    --sidebar-foreground: 180 20% 96%;
+    --sidebar-primary: 168 70% 63%;
+    --sidebar-primary-foreground: 190 60% 8%;
+    --sidebar-accent: 190 35% 12%;
+    --sidebar-accent-foreground: 180 20% 96%;
+    --sidebar-border: 190 25% 16%;
+    --sidebar-ring: 168 70% 63%;
   }
 }
 
