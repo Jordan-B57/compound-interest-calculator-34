@@ -163,7 +163,8 @@ const Index = () => {
       </section>
 
       {/* SOBRE */}
-      <section id="sobre" className="container mx-auto px-4 py-24 md:py-32">
+      <section id="sobre" className="section-light">
+        <div className="container mx-auto px-4 py-24 md:py-32">
         <div className="grid gap-12 md:grid-cols-12 md:gap-16">
           <div className="md:col-span-5">
             <div className="relative">
@@ -214,6 +215,7 @@ const Index = () => {
             </div>
           </div>
         </div>
+        </div>
       </section>
 
       {/* SERVIÇOS */}
@@ -256,7 +258,8 @@ const Index = () => {
       </section>
 
       {/* PROCESSO */}
-      <section id="processo" className="container mx-auto px-4 py-24 md:py-32">
+      <section id="processo" className="section-light">
+        <div className="container mx-auto px-4 py-24 md:py-32">
         <div className="mb-16 max-w-3xl">
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.25em] text-primary">
             Como funciona
@@ -274,6 +277,7 @@ const Index = () => {
               <p className="mt-2 text-sm leading-relaxed text-foreground/70">{p.description}</p>
             </div>
           ))}
+        </div>
         </div>
       </section>
 
