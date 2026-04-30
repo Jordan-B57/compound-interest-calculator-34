@@ -17,11 +17,11 @@ const SiteHeader = () => {
           <div className="relative flex h-8 w-8 items-center justify-center">
             <span className="absolute inset-0 rounded-md bg-primary/20 blur-sm" />
             <span className="relative font-display text-2xl leading-none text-primary">
-              p
+              D
             </span>
           </div>
           <span className="text-sm font-semibold tracking-tight text-foreground md:text-base">
-            planejamento<span className="text-primary">.</span>
+            Davyd Dunda<span className="text-primary">.</span>
           </span>
         </Link>
 
