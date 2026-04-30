@@ -106,13 +106,13 @@ const Index = () => {
         <div className="container relative mx-auto px-4 pb-24 pt-20 md:pb-40 md:pt-32">
           <div className="max-w-2xl">
             <h1 className="text-5xl font-light leading-[1.05] tracking-tight text-foreground md:text-6xl lg:text-7xl">
-              Sinta a sensação de transformar cada um dos{" "}
-              <span className="text-primary">seus objetivos em conquistas</span>
+              Decisões financeiras inteligentes começam com um{" "}
+              <span className="text-primary">plano bem estruturado</span>
             </h1>
 
             <p className="mt-8 max-w-lg text-base text-foreground/75 md:text-lg">
-              Seu novo Planejamento Financeiro 100% personalizado está a um
-              clique de distância. Comece agora.
+              Tenha um planejamento financeiro 100% personalizado para sua
+              realidade. Comece agora.
             </p>
 
             <div className="mt-10 flex flex-wrap items-center gap-4">

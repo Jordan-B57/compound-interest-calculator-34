@@ -137,8 +137,10 @@ const simulatePrice = (
 const FinancingCalculator = () => {
   const [propertyValue, setPropertyValue] = useState(300000);
   const [downPayment, setDownPayment] = useState(60000);
-  const [years, setYears] = useState(30);
-  const [annualRate, setAnnualRate] = useState(11);
+  const [term, setTerm] = useState(30);
+  const [termUnit, setTermUnit] = useState<"anos" | "meses">("anos");
+  const [rate, setRate] = useState(11);
+  const [rateUnit, setRateUnit] = useState<"anual" | "mensal">("anual");
 
   const [propertyValueStr, setPropertyValueStr] = useState(
     formatBRLInput(300000),
@@ -153,8 +155,14 @@ const FinancingCalculator = () => {
   );
 
   const handleCalculate = () => {
-    const months = Math.max(1, Math.round(years * 12));
-    const monthlyRate = Math.pow(1 + annualRate / 100, 1 / 12) - 1;
+    const months = Math.max(
+      1,
+      Math.round(termUnit === "anos" ? term * 12 : term),
+    );
+    const monthlyRate =
+      rateUnit === "anual"
+        ? Math.pow(1 + rate / 100, 1 / 12) - 1
+        : rate / 100;
 
     const sac = simulateSAC(financedAmount, monthlyRate, months);
     const price = simulatePrice(financedAmount, monthlyRate, months);
@@ -261,29 +269,52 @@ const FinancingCalculator = () => {
 
           <div>
             <label className="mb-1.5 block text-sm font-medium text-foreground">
-              Prazo (anos)
+              Prazo
             </label>
-            <input
-              type="number"
-              min={1}
-              max={50}
-              value={years}
-              onChange={(e) => setYears(Number(e.target.value) || 0)}
-              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            />
+            <div className="flex gap-2">
+              <input
+                type="number"
+                min={1}
+                value={term}
+                onChange={(e) => setTerm(Number(e.target.value) || 0)}
+                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
+              <select
+                value={termUnit}
+                onChange={(e) =>
+                  setTermUnit(e.target.value as "anos" | "meses")
+                }
+                className="h-10 rounded-md border border-input bg-background px-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <option value="anos">anos</option>
+                <option value="meses">meses</option>
+              </select>
+            </div>
           </div>
 
           <div>
             <label className="mb-1.5 block text-sm font-medium text-foreground">
-              Taxa de juros anual (%)
+              Taxa de juros (%)
             </label>
-            <input
-              type="number"
-              step="0.01"
-              value={annualRate}
-              onChange={(e) => setAnnualRate(Number(e.target.value) || 0)}
-              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            />
+            <div className="flex gap-2">
+              <input
+                type="number"
+                step="0.01"
+                value={rate}
+                onChange={(e) => setRate(Number(e.target.value) || 0)}
+                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              />
+              <select
+                value={rateUnit}
+                onChange={(e) =>
+                  setRateUnit(e.target.value as "anual" | "mensal")
+                }
+                className="h-10 rounded-md border border-input bg-background px-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <option value="anual">ao ano</option>
+                <option value="mensal">ao mês</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -297,7 +328,7 @@ const FinancingCalculator = () => {
         <Button
           onClick={handleCalculate}
           className="mt-6 w-full md:w-auto"
-          disabled={financedAmount <= 0 || years <= 0 || annualRate < 0}
+          disabled={financedAmount <= 0 || term <= 0 || rate < 0}
         >
           Calcular
         </Button>
