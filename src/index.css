@@ -102,9 +102,9 @@
   }
 
   .font-display {
-    font-family: 'Instrument Serif', 'Manrope', serif;
-    font-weight: 400;
-    letter-spacing: -0.02em;
+    font-family: 'Manrope', system-ui, sans-serif;
+    font-weight: 300;
+    letter-spacing: -0.025em;
   }
 }
 
@@ -127,4 +127,22 @@
   .shadow-elevated {
     box-shadow: var(--shadow-elevated);
   }
+  /* Seções claras estilo W1 */
+  .section-light {
+    background-color: hsl(var(--light-bg));
+    color: hsl(var(--light-foreground));
+  }
+  .section-light .text-foreground { color: hsl(var(--light-foreground)); }
+  .section-light .text-foreground\/70,
+  .section-light .text-foreground\/75,
+  .section-light .text-foreground\/80 { color: hsl(var(--light-muted)); }
+  .section-light .text-muted-foreground { color: hsl(var(--light-muted)); }
+  .section-light .border-border\/40,
+  .section-light .border-border\/60,
+  .section-light .border-border { border-color: hsl(var(--light-border)); }
+  .section-light .bg-border\/40,
+  .section-light .bg-border\/60 { background-color: hsl(var(--light-border)); }
+  .section-light .bg-background { background-color: hsl(var(--light-bg)); }
+  .section-light .bg-surface\/30,
+  .section-light .bg-surface\/60 { background-color: hsl(200 20% 92%); }
 }
