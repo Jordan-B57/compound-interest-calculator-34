@@ -11,7 +11,7 @@ import {
   Mail,
   Phone,
 } from "lucide-react";
-import heroAbstract from "@/assets/hero-abstract.jpg";
+import heroAbstract from "@/assets/hero-glow.jpg";
 import davydPhoto from "@/assets/davyd-venice.jpg";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
@@ -98,30 +98,21 @@ const Index = () => {
           alt=""
           aria-hidden="true"
           width={1920}
-          height={1080}
-          className="absolute inset-0 h-full w-full object-cover opacity-60 mix-blend-screen"
+          height={1088}
+          className="absolute inset-0 h-full w-full object-cover opacity-70"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-transparent" />
 
         <div className="container relative mx-auto px-4 pb-24 pt-20 md:pb-40 md:pt-32">
-          <div className="max-w-4xl">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border/60 bg-surface/60 px-4 py-1.5 text-xs font-medium text-foreground/80 backdrop-blur">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary shadow-glow" />
-              Consultoria financeira independente
-            </div>
-
-            <h1 className="font-display text-5xl leading-[1.05] tracking-tight text-foreground md:text-7xl lg:text-[5.5rem]">
-              Transforme cada{" "}
-              <span className="italic text-primary">objetivo</span>{" "}
-              em uma{" "}
-              <span className="italic">conquista</span>{" "}
-              real.
+          <div className="max-w-2xl">
+            <h1 className="text-5xl font-light leading-[1.05] tracking-tight text-foreground md:text-6xl lg:text-7xl">
+              Sinta a sensação de transformar cada um dos{" "}
+              <span className="text-primary">seus objetivos em conquistas</span>
             </h1>
 
-            <p className="mt-7 max-w-2xl text-base text-foreground/70 md:text-lg">
-              Organização, planejamento e blindagem do seu patrimônio em uma
-              consultoria 100% personalizada. Decisões com clareza, sem
-              fórmulas mágicas.
+            <p className="mt-8 max-w-lg text-base text-foreground/75 md:text-lg">
+              Seu novo Planejamento Financeiro 100% personalizado está a um
+              clique de distância. Comece agora.
             </p>
 
             <div className="mt-10 flex flex-wrap items-center gap-4">
@@ -129,14 +120,14 @@ const Index = () => {
                 href="https://form.respondi.app/3BBS1W9K"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary-glow hover:shadow-glow"
+                className="group inline-flex items-center gap-3 rounded-full bg-primary px-8 py-4 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary-glow hover:shadow-glow"
               >
-                Fale com um especialista
-                <ArrowUpRight className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                Agendar consultoria
               </a>
               <Link
                 to="/calculadoras"
-                className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-surface/40 px-7 py-3.5 text-sm font-semibold text-foreground backdrop-blur transition-colors hover:border-primary hover:text-primary"
+                className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-surface/40 px-7 py-4 text-sm font-semibold text-foreground backdrop-blur transition-colors hover:border-primary hover:text-primary"
               >
                 Calculadoras gratuitas
                 <ArrowRight className="h-4 w-4" />
