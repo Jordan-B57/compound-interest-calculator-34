@@ -278,6 +278,7 @@ const Index = () => {
             </div>
           ))}
         </div>
+        </div>
       </section>
 
       {/* FAQ */}
