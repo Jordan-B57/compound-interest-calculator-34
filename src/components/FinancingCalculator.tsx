@@ -137,8 +137,10 @@ const simulatePrice = (
 const FinancingCalculator = () => {
   const [propertyValue, setPropertyValue] = useState(300000);
   const [downPayment, setDownPayment] = useState(60000);
-  const [years, setYears] = useState(30);
-  const [annualRate, setAnnualRate] = useState(11);
+  const [term, setTerm] = useState(30);
+  const [termUnit, setTermUnit] = useState<"anos" | "meses">("anos");
+  const [rate, setRate] = useState(11);
+  const [rateUnit, setRateUnit] = useState<"anual" | "mensal">("anual");
 
   const [propertyValueStr, setPropertyValueStr] = useState(
     formatBRLInput(300000),
